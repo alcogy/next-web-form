@@ -2,3 +2,8 @@
 
 TinyWebForm is a simple create web form system.
 This system is build by NextJS.
+
+## Pages
+- Editor
+- Preview
+

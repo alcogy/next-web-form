@@ -35,7 +35,6 @@ export const sampleForms: FormSet[] = [
   { label: 'Country', type: 2, require: false, value: 2, items: countories, placeholder: undefined},
   { label: 'job', type: 4, require: true, value: 1, items: jobs, placeholder: undefined},
   { label: 'Language', type: 3, require: false, value: 1, items: languages, placeholder: undefined},
-  
 ]
 
 export interface Selection {
