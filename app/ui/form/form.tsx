@@ -21,7 +21,9 @@ export default function Form({
   async function onSubmit() {
     if (isEdit) return;
     if (!confirm('Are you sure?')) return;
-
+    
+    // TODO your function.
+    alert("did it!");
   }
 
   function getRandString() {
@@ -85,7 +87,7 @@ export default function Form({
         <h1 className='text-3xl font-bold mb-3'>
           {title}
         </h1>
-        <p className='whitespace-pre'>
+        <p className='whitespace-pre-wrap'>
           {desc}
         </p>
       </div>

@@ -26,7 +26,6 @@ export default function Page() {
   }, []);
 
   async function onSave() {
-    console.log(ui);
     await fetch('/api/form', {
       method: 'put',
       body: JSON.stringify({
@@ -35,6 +34,7 @@ export default function Page() {
         ui: ui,
       }),
     });
+    alert('saved!');
   }
 
   function onClickItem(v: number) {
