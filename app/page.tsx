@@ -25,6 +25,9 @@ export default function Page() {
     
   }, []);
 
+  /**
+   * Save to Database.
+   */
   async function onSave() {
     await fetch('/api/form', {
       method: 'put',
@@ -37,10 +40,27 @@ export default function Page() {
     alert('saved!');
   }
 
+  /**
+   * Genarate form name string;
+   * @returns 
+   */
+  function genNameString(): string {
+    const name = Math.random().toString(32).substring(2);
+    const i = ui.findIndex((v) => v.name === name);
+    if (i >= 0) return genNameString();
+    return name;
+  }
+
+  /**
+   * Add Item.
+   * @param v 
+   */
   function onClickItem(v: number) {
     const newUi = [...ui];
+  
     newUi.push({
       label: 'Label Here',
+      name: genNameString(),
       type: v,
       require: false,
       value: '',

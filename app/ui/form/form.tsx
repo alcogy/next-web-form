@@ -26,9 +26,7 @@ export default function Form({
     alert("did it!");
   }
 
-  function getRandString() {
-    return Math.random().toString(32).substring(2);
-  }
+  
 
   function getFormComponent(form: FormSet): React.ReactNode {
       switch(form.type) {
@@ -36,6 +34,7 @@ export default function Form({
           return (
             <input
               type="text"
+              name={form.name}
               className="border border-gray-400 px-3 h-10 rounded-md w-full"
               placeholder={form.placeholder}
               required={form.require}
@@ -43,7 +42,7 @@ export default function Form({
           );
         case 2:
           return (
-            <select required={form.require} className="border border-gray-400 px-2 h-10 rounded-md w-full">
+            <select  name={form.name} required={form.require} className="border border-gray-400 px-2 h-10 rounded-md w-full">
               {form.items?.map((v) => (
                 <option key={v.id} value={v.id}>{v.label}</option>
               ))}
@@ -54,17 +53,16 @@ export default function Form({
             <div className='flex gap-4'>
               {form.items?.map((v) => (
                 <label key={v.id}>
-                  <input type="checkbox" required={form.require} value={v.id} className="mr-1" />{v.label}
+                  <input type="checkbox" required={form.require} name={form.name} value={v.id} className="mr-1" />{v.label}
                 </label>
               ))}
             </div>
           );
         case 4:
-          const name = getRandString();
           return (
             <div className='flex gap-4'>
               {form.items?.map((v) => (
-                <label key={v.id}><input type="radio" required={form.require} name={name} value={v.id} className="mr-1" />{v.label}</label>
+                <label key={v.id}><input type="radio" required={form.require} name={form.name} value={v.id} className="mr-1" />{v.label}</label>
               ))}
             </div>
           );
@@ -72,6 +70,7 @@ export default function Form({
           return (
             <input
               type="number"
+              name={form.name}
               className="border border-gray-400 px-3 h-10 rounded-md w-full"
               required={form.require}
             />

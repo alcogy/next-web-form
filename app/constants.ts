@@ -30,11 +30,11 @@ const jobs: Selection[] = [
 ];
 
 export const sampleForms: FormSet[] = [
-  { label: 'Name', type: 1, require: true, value: '', items: undefined, placeholder:'Enter your name.' },
-  { label: 'age', type: 5, require: true, value: 14, items: undefined, placeholder: undefined},
-  { label: 'Country', type: 2, require: false, value: 2, items: countories, placeholder: undefined},
-  { label: 'job', type: 4, require: true, value: 1, items: jobs, placeholder: undefined},
-  { label: 'Language', type: 3, require: false, value: 1, items: languages, placeholder: undefined},
+  { label: 'Name', name: 'aEjkokw', type: 1, require: true, value: '', items: undefined, placeholder:'Enter your name.' },
+  { label: 'age', name: 'gewgew', type: 5, require: true, value: 14, items: undefined, placeholder: undefined},
+  { label: 'Country', name: 'koo#jf', type: 2, require: false, value: 2, items: countories, placeholder: undefined},
+  { label: 'job', name: 'kofi$k', type: 4, require: true, value: 1, items: jobs, placeholder: undefined},
+  { label: 'Language', name: 'wmvkWeo', type: 3, require: false, value: 1, items: languages, placeholder: undefined},
 ]
 
 export interface Selection {
@@ -44,6 +44,7 @@ export interface Selection {
 
 export interface FormSet {
   label: string;
+  name: string;
   type: number;
   require: boolean;
   value: string | number | Date | number[];
