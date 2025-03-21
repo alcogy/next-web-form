@@ -1,6 +1,8 @@
-'use client'
+'use client';
 
 import { FormSet } from '@/app/constants';
+import Components from '@/app/ui/form/components';
+import { submitForm } from '@/app/lib/action';
 
 export default function Form({
   ui,
@@ -17,71 +19,15 @@ export default function Form({
   selected?: number | null,
   setSelected?: (v: any) => void,
 }) {
-
-  async function onSubmit() {
+  
+  function onSubmit(formData: FormData) {
     if (isEdit) return;
     if (!confirm('Are you sure?')) return;
-    
-    // TODO your function.
-    alert("did it!");
+    submitForm(formData);
   }
 
-  
-
-  function getFormComponent(form: FormSet): React.ReactNode {
-      switch(form.type) {
-        case 1:
-          return (
-            <input
-              type="text"
-              name={form.name}
-              className="border border-gray-400 px-3 h-10 rounded-md w-full"
-              placeholder={form.placeholder}
-              required={form.require}
-            />
-          );
-        case 2:
-          return (
-            <select  name={form.name} required={form.require} className="border border-gray-400 px-2 h-10 rounded-md w-full">
-              {form.items?.map((v) => (
-                <option key={v.id} value={v.id}>{v.label}</option>
-              ))}
-            </select>
-          );
-        case 3:
-          return (
-            <div className='flex gap-4'>
-              {form.items?.map((v) => (
-                <label key={v.id}>
-                  <input type="checkbox" required={form.require} name={form.name} value={v.id} className="mr-1" />{v.label}
-                </label>
-              ))}
-            </div>
-          );
-        case 4:
-          return (
-            <div className='flex gap-4'>
-              {form.items?.map((v) => (
-                <label key={v.id}><input type="radio" required={form.require} name={form.name} value={v.id} className="mr-1" />{v.label}</label>
-              ))}
-            </div>
-          );
-        case 5:
-          return (
-            <input
-              type="number"
-              name={form.name}
-              className="border border-gray-400 px-3 h-10 rounded-md w-full"
-              required={form.require}
-            />
-          );
-      }
-      
-      return <></>
-    } 
-
   return (
-    <form className='bg-white w-full max-w-4xl select-none p-6 rounded-xl h-fit'>
+    <form className='bg-white w-full max-w-4xl select-none p-6 rounded-xl h-fit' action={onSubmit}>
       <div onClick={() => setSelected && setSelected(null)}>
         <h1 className='text-3xl font-bold mb-3'>
           {title}
@@ -98,17 +44,19 @@ export default function Form({
             onClick={() => setSelected && setSelected(i)}
           >
             <p className='block'>{v.label}{v.require && <span className='pl-2 text-red-700'>*</span>}</p>
-            {getFormComponent(v)}
+            <Components form={v} />
           </div>
         ))}
       </div>
       <div className='mt-7 text-center'>
-        <button
+        {isEdit ? (
+          <button className='bg-blue-500 hover:bg-blue-400 text-white cursor-pointer px-3 py-1.5 rounded-md' type="button">Submit</button>
+        ): ( 
+        <input
+          type="submit"
           className='bg-blue-500 hover:bg-blue-400 text-white cursor-pointer px-3 py-1.5 rounded-md'
-          onClick={() => onSubmit()}
-        >
-            Submit
-        </button>
+          value="Submit"
+        />)}
       </div>
     </form>
   );
