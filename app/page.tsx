@@ -59,7 +59,7 @@ export default function Page() {
     const newUi = [...ui];
   
     newUi.push({
-      label: 'Label Here',
+      label: 'Label',
       name: genNameString(),
       type: v,
       require: false,
