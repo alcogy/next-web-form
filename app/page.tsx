@@ -1,18 +1,41 @@
 'use client'
 
 import Link from 'next/link'
-import { sampleForms, FormSet } from '@/app/constants';
-import { useState } from 'react';
+import { FormSet } from '@/app/constants';
+import { useEffect, useState } from 'react';
 import EditParams from '@/app/ui/editor/edit-params';
 import Form from '@/app/ui/form/form';
 import Palette from '@/app/ui/editor/palette';
 
 export default function Page() {
- 
-  const [ui, setUi] = useState<FormSet[]>(sampleForms);
+  
+  const [ui, setUi] = useState<FormSet[]>([]);
   const [selected, setSelected] = useState<number|null>(null);
-  const [title, setTitle] = useState<string>('Form title here');
-  const [desc, setDesc] = useState<string>('From description here...');
+  const [title, setTitle] = useState<string>('');
+  const [desc, setDesc] = useState<string>('');
+
+  useEffect(()=> {
+    (async () => {
+      const res = await fetch('/api/form');
+      const data = await res.json();
+      setTitle(data.title);
+      setDesc(data.desc);
+      setUi(data.ui as unknown as FormSet[]);
+    })()
+    
+  }, []);
+
+  async function onSave() {
+    console.log(ui);
+    await fetch('/api/form', {
+      method: 'put',
+      body: JSON.stringify({
+        title: title,
+        desc: desc,
+        ui: ui,
+      }),
+    });
+  }
 
   function onClickItem(v: number) {
     const newUi = [...ui];
@@ -21,7 +44,7 @@ export default function Page() {
       type: v,
       require: false,
       value: '',
-      items: [1,5].includes(v) ? undefined : [{id: 1, label:'item1'}, {id: 2, label:'item2'}],
+      items: [1,5].includes(v) ? undefined : [{id: 1, label:'item1'}, { id: 2, label:'item2' }],
       placeholder: v === 1 ? '' : undefined,
     });
     setUi(newUi);
@@ -45,8 +68,15 @@ export default function Page() {
       <header className="bg-gray-700 h-10 px-2 flex justify-between items-center">
         <h1 className="text-white text-lg font-bold">TinyWebForm Editor</h1>
         <div className='flex gap-3 items-center'>
-          <button className='text-white bg-blue-500 hover:bg-blue-400 px-3 rounded-md cursor-pointer'>Save</button>
-          <Link href="/form" target='_blank' className='p-2 text-white hover:opacity-80'>Preview</Link>
+          <button
+            className='text-white bg-blue-500 hover:bg-blue-400 px-3 rounded-md cursor-pointer'
+            onClick={onSave}
+          >
+            Save
+          </button>
+          <Link href="/form" target='_blank' className='p-2 text-white hover:opacity-80'>
+            Preview
+          </Link>
         </div>
       </header>
       <main className="flex items-stretch h-[calc(100vh-2.5rem)]">

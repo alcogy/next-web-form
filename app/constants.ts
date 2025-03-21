@@ -50,3 +50,10 @@ export interface FormSet {
   placeholder?: string;
   items?: Selection[];
 }
+
+export interface FormData {
+  id: string;
+  title: string;
+  desc: string;
+  forms: FormSet[];
+}
