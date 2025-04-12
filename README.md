@@ -1,9 +1,19 @@
 # Tiny Web Form
 
-TinyWebForm is a simple create web form system.
-This system is build by NextJS.
+TinyWebForm is a simple no-code web form system.
+
+![Editor view](/readme/screen.png)
+
+⚠️This system for learning no-code and NextJS. Therefore, there are few excellent functions and screens. In particular, there is no authentication function, so it is very dangerous to deploy it as it is.
 
 ## Pages
-- Editor
+- Form list 
+- Form edit
 - Preview
 
+## Main dependent libraries
+- Nextjs
+- TypeScript
+- prisma
+- tailwindcss
+- zustand
