@@ -2,9 +2,11 @@ import Form from '@/app/ui/form/form';
 import { FormSet } from '@/app/constants';
 import { getFormData } from '@/app/lib/data';
 
-export default async function Page() {
+export default async function Page(props: { params: Promise<{ id: string }> }) {
   
-  const data = await getFormData();
+  const params = await props.params;
+  const id = params.id;
+  const data = await getFormData(id);
 
   return (
     <>

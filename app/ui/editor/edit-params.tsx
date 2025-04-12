@@ -1,4 +1,5 @@
 import { FormSet } from '@/app/constants';
+import Toggle from '@/app/ui/editor/toggle';
 
 export default function EditParams({
   params,
@@ -74,12 +75,7 @@ export default function EditParams({
         <div>
           <label>Require</label>
           <div className='text-left p-2'>
-            <input
-              type="checkbox"
-              className="border border-gray-400 rounded-md"
-              checked={params.require}
-              onChange={() => onUpdate({...params, require: !params.require})}
-            />
+            <Toggle on={params.require} onClick={() => onUpdate({...params, require: !params.require})}  />
           </div>
         </div>
         {params.placeholder !== undefined && (

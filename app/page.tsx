@@ -1,122 +1,60 @@
-'use client'
-
 import Link from 'next/link'
-import { FormSet } from '@/app/constants';
-import { useEffect, useState } from 'react';
-import EditParams from '@/app/ui/editor/edit-params';
-import Form from '@/app/ui/form/form';
-import Palette from '@/app/ui/editor/palette';
+import { fetchAllForms } from '@/app/lib/data';
+import FormListActionButton from './ui/components/form-list-action-button';
 
-export default function Page() {
+export default async function Page() {
   
-  const [ui, setUi] = useState<FormSet[]>([]);
-  const [selected, setSelected] = useState<number|null>(null);
-  const [title, setTitle] = useState<string>('');
-  const [desc, setDesc] = useState<string>('');
-
-  useEffect(()=> {
-    (async () => {
-      const res = await fetch('/api/form');
-      const data = await res.json();
-      setTitle(data.title);
-      setDesc(data.desc);
-      setUi(data.ui as unknown as FormSet[]);
-    })()
-    
-  }, []);
-
-  /**
-   * Save to Database.
-   */
-  async function onSave() {
-    await fetch('/api/form', {
-      method: 'put',
-      body: JSON.stringify({
-        title: title,
-        desc: desc,
-        ui: ui,
-      }),
-    });
-    alert('saved!');
-  }
-
-  /**
-   * Genarate form name string;
-   * @returns 
-   */
-  function genNameString(): string {
-    const name = Math.random().toString(32).substring(2);
-    const i = ui.findIndex((v) => v.name === name);
-    if (i >= 0) return genNameString();
-    return name;
-  }
-
-  /**
-   * Add Item.
-   * @param v 
-   */
-  function onClickItem(v: number) {
-    const newUi = [...ui];
+  const data = await fetchAllForms();
   
-    newUi.push({
-      label: 'Label',
-      name: genNameString(),
-      type: v,
-      require: false,
-      value: '',
-      items: [1,5].includes(v) ? undefined : [{id: 1, label:'item1'}, { id: 2, label:'item2' }],
-      placeholder: v === 1 ? '' : undefined,
-    });
-    setUi(newUi);
-  }
-
-  function onUpdate(data: FormSet) {
-    const newUi = ui.map((v, i) => i === selected ? data : v);
-    setUi(newUi);
-  }
-
-  function onDelete() {
-    const newUi = ui.filter((_, i) => i !== selected);
-    setUi(newUi);
-    setSelected(null);
-  }
-
-  const params = ui.find((_, i) => i === selected);
-
   return (
     <>
       <header className="bg-gray-700 h-10 px-2 flex justify-between items-center">
         <h1 className="text-white text-lg font-bold">TinyWebForm Editor</h1>
-        <div className='flex gap-3 items-center'>
-          <button
-            className='text-white bg-blue-500 hover:bg-blue-400 px-3 rounded-md cursor-pointer'
-            onClick={onSave}
-          >
-            Save
-          </button>
-          <Link href="/form" target='_blank' className='p-2 text-white hover:opacity-80'>
-            Preview
-          </Link>
-        </div>
       </header>
-      <main className="flex items-stretch h-[calc(100vh-2.5rem)]">
-        <div className="bg-white w-88 border-r border-gray-300 p-4">
-          <Palette onClickItem={onClickItem} />
-        </div>
-        <div className="w-full py-8 px-3 flex justify-center overflow-y-auto">
-          <Form isEdit ui={ui} selected={selected} setSelected={setSelected} title={title} desc={desc} />
-        </div>
-        <div className="bg-white w-[480px] border-l border-gray-300 p-4 overflow-y-auto">
-          <p className="text-lg font-bold">Edit parameter</p>
-          <EditParams
-            params={params}
-            title={title}
-            desc={desc}
-            setTitle={setTitle}
-            setDesc={setDesc}
-            onDelete={onDelete}
-            onUpdate={onUpdate}
-          />
+      <main className="flex justify-center items-start h-[calc(100vh-2.5rem)] p-4">
+        <div className='w-full max-w-[1280px]'>
+          <div className='flex justify-between items-center'>
+            <h2 className='font-bold text-3xl text-gray-600'>FormList</h2>
+            <Link href='/edit' className='bg-sky-600 hover:bg-sky-500 text-white rounded-md px-3 py-1'>Create</Link>
+          </div>
+          
+          {data.length > 0 ? (
+            <>
+              <table className='border-collapse w-full shadow-sm mt-5 bg-gray-100 rounded-lg'>
+                <thead>
+                  <tr>
+                    <th className='border-b-1 border-gray-300 px-4 py-3 text-left text-gray-500'>ID</th>
+                    <th className='border-b-1 border-gray-300 px-4 py-3 text-left text-gray-500'>Title</th>
+                    <th className='border-b-1 border-gray-300 px-4 py-3 text-left text-gray-500'>Description</th>
+                    <th className='border-b-1 border-gray-300 px-4 py-3 text-left text-gray-500'>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((v) => (
+                    <tr key={v.id}>
+                      <td className='border-b-1 border-gray-300 px-4 py-2 text-left text-nowrap w-64'>{v.id}</td>
+                      <td className='border-b-1 border-gray-300 px-4 py-2 text-left'>{v.title}</td>
+                      <td className='border-b-1 border-gray-300 px-4 py-2 text-left'>{v.desc}</td>
+                      <td className='border-b-1 border-gray-300 px-4 py-2 text-left w-32 relative'>
+                        <div className='flex gap-1 items-center'>
+                        <Link
+                            href={`/form/${v.id}`}
+                            className='bg-gray-300 text-sm font-bold text-gray-700 px-3 h-7 rounded-md flex items-center'
+                            target='_blank'
+                          >
+                            Preview
+                          </Link>
+                          <FormListActionButton id={v.id} />
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          ) : (
+            <p className='text-center py-24'> No form data.</p>
+          )}
         </div>
       </main>
     </>
