@@ -3,6 +3,7 @@
 import { FormSet } from '@/app/constants';
 import Components from '@/app/ui/form/components';
 import { submitForm } from '@/app/lib/action';
+import { useEffect, useState } from 'react';
 
 export default function Form({
   ui,
@@ -11,6 +12,7 @@ export default function Form({
   desc,
   selected,
   setSelected,
+	onSort,
 } : {
   isEdit?: boolean,
   ui: FormSet[],
@@ -18,13 +20,43 @@ export default function Form({
   desc: string,
   selected?: number | null,
   setSelected?: (v: any) => void,
+	onSort: (from: number, to: number) => void,
 }) {
-  
+
+  const [isMouseDownIndex, setIsMouseDownIndex] = useState<number>(-1);
+	const [sortTarget, setSortTarget] = useState<number>(-1);
+	
   function onSubmit(formData: FormData) {
     if (isEdit) return;
     if (!confirm('Are you sure?')) return;
     submitForm(formData);
   }
+
+	function onMouseEnter(i: number) {
+		if (isMouseDownIndex < 0) return;
+
+		if (i === isMouseDownIndex) {
+			setSortTarget(-1);
+		} else {
+			setSortTarget(i);
+		}
+	}
+
+	function onMouseUp() {
+		if (isMouseDownIndex >= 0 && sortTarget >= 0) {
+			onSort(isMouseDownIndex, sortTarget);
+		}
+		setSortTarget(-1);
+		setIsMouseDownIndex(-1);
+	}
+
+	useEffect(() => {
+		window.addEventListener('mouseup', onMouseUp);
+
+		return () => {
+			window.removeEventListener('mouseup', onMouseUp);
+		}
+	}, [isMouseDownIndex, sortTarget])
 
   return (
     <form className='bg-white w-full max-w-4xl select-none p-6 rounded-xl h-fit' action={onSubmit}>
@@ -40,8 +72,10 @@ export default function Form({
         {ui.map((v, i) => (
           <div
             key={i}
-            className={`p-3 ${i === selected ? 'bg-gray-200' : isEdit ? 'hover:bg-blue-50' : ''}`}
+            className={`p-3 ${i === selected ? 'bg-gray-200' : isEdit ? 'hover:bg-blue-50' : ''} ${sortTarget === i ? 'border-t-4 border-blue-400' : ''} ${isMouseDownIndex >= 0 ? 'cursor-grabbing!' : ''}`}
             onClick={() => setSelected && setSelected(i)}
+						onMouseDown={() => setIsMouseDownIndex(i)}
+						onMouseEnter={() => onMouseEnter(i)}
           >
             <p className='block'>{v.label}{v.require && <span className='pl-2 text-red-700'>*</span>}</p>
             <Components form={v} />

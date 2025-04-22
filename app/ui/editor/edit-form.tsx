@@ -70,6 +70,12 @@ export default function EditForm({
     setSelected(null);
   }
 
+	function onSort(from: number, to: number) {
+		const newUI = ui.filter((_, i) => i !== from);
+		newUI.splice(to, 0, ui[from]);
+		setUi(newUI);
+	}
+
   const params = ui.find((_, i) => i === selected);
 
   return (
@@ -78,7 +84,7 @@ export default function EditForm({
         <Palette onClickItem={onClickItem} />
       </div>
       <div className="w-full py-8 px-3 flex justify-center overflow-y-auto">
-        <Form isEdit ui={ui} selected={selected} setSelected={setSelected} title={title} desc={desc} />
+        <Form isEdit ui={ui} selected={selected} setSelected={setSelected} title={title} desc={desc} onSort={onSort} />
       </div>
       <div className="bg-white w-[480px] border-l border-gray-300 p-4 overflow-y-auto">
         <p className="text-lg font-bold">Edit parameter</p>
