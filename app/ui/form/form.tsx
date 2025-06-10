@@ -20,7 +20,7 @@ export default function Form({
   desc: string,
   selected?: number | null,
   setSelected?: (v: any) => void,
-	onSort: (from: number, to: number) => void,
+	onSort?: (from: number, to: number) => void,
 }) {
 
   const [isMouseDownIndex, setIsMouseDownIndex] = useState<number>(-1);
@@ -43,7 +43,7 @@ export default function Form({
 	}
 
 	function onMouseUp() {
-		if (isMouseDownIndex >= 0 && sortTarget >= 0) {
+		if (isMouseDownIndex >= 0 && sortTarget >= 0 && onSort) {
 			onSort(isMouseDownIndex, sortTarget);
 		}
 		setSortTarget(-1);

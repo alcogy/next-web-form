@@ -1,6 +1,6 @@
-# Tiny Web Form
+# Next Web Form
 
-TinyWebForm is a simple no-code web form system.
+NextWebForm is a simple no-code web form system.
 
 ![Editor view](/readme/screen.png)
 

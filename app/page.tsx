@@ -9,7 +9,7 @@ export default async function Page() {
   return (
     <>
       <header className="bg-gray-700 h-10 px-2 flex justify-between items-center">
-        <h1 className="text-white text-lg font-bold">TinyWebForm Editor</h1>
+        <h1 className="text-white text-lg font-bold">NextWebForm Editor</h1>
       </header>
       <main className="flex justify-center items-start h-[calc(100vh-2.5rem)] p-4">
         <div className='w-full max-w-[1280px]'>

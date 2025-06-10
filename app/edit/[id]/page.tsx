@@ -13,7 +13,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   return (
     <>
       <header className="bg-gray-700 h-10 px-2 flex justify-between items-center">
-        <h1 className="text-white text-lg font-bold"><Link href="/">TinyWebForm Editor</Link></h1>
+        <h1 className="text-white text-lg font-bold"><Link href="/">NextWebForm Editor</Link></h1>
         <div className='flex gap-3 items-center'>
           <SaveButton id={id} />
           <Link href={`/form/${id}`} target='_blank' className='p-2 text-white hover:opacity-80'>
