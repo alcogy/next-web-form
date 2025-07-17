@@ -14,7 +14,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
         <h1 className="text-white text-lg font-bold">NextWebForm</h1>
       </header>
       <main className='p-8 flex justify-center'>
-        <Form ui={data.ui as unknown as FormSet[]} title={data.title} desc={data.desc} />
+        <Form id={data.id} ui={data.ui as unknown as FormSet[]} title={data.title} desc={data.desc} />
       </main>
     </>
   );

@@ -3,9 +3,10 @@
 import { FormSet } from '@/app/constants';
 import Components from '@/app/ui/form/components';
 import { submitForm } from '@/app/lib/action';
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 
 export default function Form({
+  id = '',
   ui,
   isEdit = false,
   title,
@@ -14,6 +15,7 @@ export default function Form({
   setSelected,
 	onSort,
 } : {
+  id?: string;
   isEdit?: boolean,
   ui: FormSet[],
   title: string,
@@ -26,9 +28,12 @@ export default function Form({
   const [isMouseDownIndex, setIsMouseDownIndex] = useState<number>(-1);
 	const [sortTarget, setSortTarget] = useState<number>(-1);
 	
-  function onSubmit(formData: FormData) {
-    if (isEdit) return;
-    if (!confirm('Are you sure?')) return;
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (isEdit || id === '') return false;
+    if (!confirm('Are you sure?')) return false;
+
+    const formData: FormData = new FormData(e.currentTarget);
     submitForm(formData);
   }
 
@@ -59,7 +64,12 @@ export default function Form({
 	}, [isMouseDownIndex, sortTarget])
 
   return (
-    <form className='bg-white w-full max-w-4xl select-none p-6 rounded-xl h-fit' action={onSubmit}>
+    <form
+      className='bg-white w-full max-w-4xl select-none p-6 rounded-xl h-fit'
+      onSubmit={onSubmit}
+      action=""
+      method="post"
+    >
       <div onClick={() => setSelected && setSelected(null)}>
         <h1 className='text-3xl font-bold mb-3'>
           {title}
@@ -72,7 +82,7 @@ export default function Form({
         {ui.map((v, i) => (
           <div
             key={i}
-            className={`p-3 ${i === selected ? 'bg-gray-200' : isEdit ? 'hover:bg-blue-50' : ''} ${sortTarget === i ? 'border-t-4 border-blue-400' : ''} ${isMouseDownIndex >= 0 ? 'cursor-grabbing!' : ''}`}
+            className={`p-3 ${i === selected ? 'bg-gray-200' : isEdit ? 'hover:bg-blue-50' : ''} ${sortTarget === i && isEdit ? 'border-t-4 border-blue-400' : ''} ${isMouseDownIndex >= 0 && isEdit ? 'cursor-grabbing!' : ''}`}
             onClick={() => setSelected && setSelected(i)}
 						onMouseDown={() => setIsMouseDownIndex(i)}
 						onMouseEnter={() => onMouseEnter(i)}
@@ -92,6 +102,7 @@ export default function Form({
           value="Submit"
         />)}
       </div>
+      {id && <input type="hidden" name="id" value={id} />}
     </form>
   );
 }
