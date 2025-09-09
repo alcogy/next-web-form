@@ -13,7 +13,11 @@ export default function Components({ form }:{form: FormSet}) {
       );
     case 2:
       return (
-        <select  name={form.name} required={form.require} className="border border-gray-400 px-2 h-10 rounded-md w-full">
+        <select
+          name={form.name}
+          required={form.require}
+          className="border border-gray-400 px-2 h-10 rounded-md w-full"
+        >
           {form.items?.map((v) => (
             <option key={v.id} value={v.id}>{v.label}</option>
           ))}
@@ -45,6 +49,15 @@ export default function Components({ form }:{form: FormSet}) {
           className="border border-gray-400 px-3 h-10 rounded-md w-full"
           required={form.require}
         />
+      );
+    case 6:
+      return(
+        <textarea
+          name={form.name}
+          className="border border-gray-400 p-2 rounded-md w-full resize-none"
+          required={form.require}
+          rows={6}
+        ></textarea>
       );
   }
   
